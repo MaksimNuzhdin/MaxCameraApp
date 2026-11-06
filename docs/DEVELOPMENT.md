@@ -71,6 +71,6 @@ The release pin is in `backend/data/upstream.json`. Normal verification changes 
 
 ## Documentation
 
-The Russian user guide is maintained in Markdown and a PDF build script under `docs/`. Its build dependencies are development-only and are not app runtime requirements. Regenerate the PDF, render every page, inspect legibility/layout and verify screenshots/captions before publishing. Do not commit QA render pages, cache files or private local paths.
+The English user guide is maintained in Markdown and a PDF build script under `docs/`. Its build dependencies are development-only and are not app runtime requirements. Regenerate the PDF, render every page, inspect legibility/layout and verify screenshots/captions before publishing. Do not commit QA render pages, cache files or private local paths.
 
 Font notices for the UI and embedded PDF fonts are preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

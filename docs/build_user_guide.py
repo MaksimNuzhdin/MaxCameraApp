@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the public Russian user guide without accessing camera or network.
+"""Build the public English user guide without accessing camera or network.
 
 Dependencies: reportlab, Pillow; DejaVu Sans (regular/bold) and Sans Mono fonts.
 Supported source: headings, paragraphs, numbered/bulleted lists, fenced code,
@@ -98,8 +98,8 @@ class GuideDoc(BaseDocTemplate):
     def __init__(self, filename, **kwargs):
         super().__init__(str(filename), pagesize=A4, leftMargin=MARGIN_X,
                          rightMargin=MARGIN_X, topMargin=MARGIN_T,
-                         bottomMargin=MARGIN_B, title='MaxCameraApp - Руководство пользователя',
-                         author='MaxCameraApp', subject='Русское руководство пользователя и администратора',
+                         bottomMargin=MARGIN_B, title='MaxCameraApp - User Guide',
+                         author='MaxCameraApp', subject='English User and Administrator Guide',
                          **kwargs)
         frame = Frame(MARGIN_X, MARGIN_B, CONTENT_W, PAGE_H - MARGIN_T - MARGIN_B,
                       leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
@@ -124,8 +124,8 @@ class GuideDoc(BaseDocTemplate):
         else:
             c.setFont('Guide', 7.4)
             c.setFillColor(MUTED)
-            c.drawString(MARGIN_X, PAGE_H - 11.5*mm, 'MaxCameraApp  /  Руководство пользователя')
-            c.drawRightString(PAGE_W - MARGIN_X, PAGE_H - 11.5*mm, 'RU · 06.11.2026')
+            c.drawString(MARGIN_X, PAGE_H - 11.5*mm, 'MaxCameraApp  /  User Guide')
+            c.drawRightString(PAGE_W - MARGIN_X, PAGE_H - 11.5*mm, 'EN · 6 Nov 2026')
         c.setFont('Guide', 7.5)
         c.setFillColor(MUTED)
         c.drawString(MARGIN_X, 10*mm, 'MaxCamera Control')
@@ -260,8 +260,8 @@ def parse_source(source, s):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source', type=Path, default=ROOT/'MaxCameraApp_User_Guide_RU.md')
-    parser.add_argument('--output', type=Path, default=ROOT/'MaxCameraApp_User_Guide_RU.pdf')
+    parser.add_argument('--source', type=Path, default=ROOT/'MaxCameraApp_User_Guide.md')
+    parser.add_argument('--output', type=Path, default=ROOT/'MaxCameraApp_User_Guide.pdf')
     parser.add_argument('--font-dir')
     args = parser.parse_args()
     register_fonts(args.font_dir)

@@ -1,41 +1,41 @@
 # MaxCameraApp
 
-**MaxCamera Control: управление GigE Vision камерой, живое видео и AI-аннотации в браузере.**
+**MaxCamera Control: GigE Vision camera control, live video and asynchronous AI annotations in your browser.**
 
-[English](README.en.md) · [PDF user guide](docs/MaxCameraApp_User_Guide_RU.pdf) · [Руководство в Markdown](docs/MaxCameraApp_User_Guide_RU.md) · [Документация](#документация)
+[PDF user guide](docs/MaxCameraApp_User_Guide.pdf) · [Editable user guide](docs/MaxCameraApp_User_Guide.md) · [Documentation index](docs/INDEX.md)
 
-![Интерфейс MaxCameraApp с AI-аннотациями](docs/images/screenshot-ai-desktop.png)
+![MaxCameraApp with AI annotations](docs/images/screenshot-ai-desktop.png)
 
-*Интерфейс настоящего приложения на синтетическом тестовом стенде. Сцена, имена, детекции и AI-результаты вымышлены; это не съёмка камеры и не доказательство точности моделей. Переключатель **Synthetic test** есть только у стенда. Баннер стандартного пароля относится к его одноразовому состоянию.*
+*Actual application UI on a disposable synthetic fixture. The scene, identities, detections and AI results are fabricated for illustration. This is not real camera footage or evidence of model accuracy. The **Synthetic test** selector exists only in the fixture. Its default-password warning is not production deployment guidance.*
 
-## Что умеет приложение
+## Features
 
-MaxCameraApp работает локальным Linux-шлюзом между браузером и камерой DinxTech MaxCamera. Интерфейс на английском, руководство пользователя на русском. Для просмотра не нужен браузерный плагин.
+MaxCameraApp is a local Linux gateway between a browser and a DinxTech MaxCamera. The responsive interface, documentation and deployment materials are in English. No browser plug-in is needed.
 
-| Возможность | Что доступно |
+| Area | Available controls |
 |---|---|
-| Живое видео | Старт/стоп, счётчики FPS и потерь, четыре качества браузерного preview |
-| Настройки камеры | Экспозиция, усиление, баланс белого, формат, ROI/масштабирование, ISP, сенсор, пресеты и диагностика |
-| Навигация | Поиск параметра, вкладки, цепочка обработки изображения, горячие клавиши |
-| Просмотр | Fit, 1:1, zoom/pan, сетка, гистограмма, fullscreen, PNG/JPEG snapshot |
-| MaxAI | Восемь групп функций, поддерживаемые настройки, состояния worker и целостные снимки результатов |
-| Визуальные эффекты | Рамки, подписи, score/similarity, ID трека, центры, заливка и след наблюдений |
-| Доступ | Локальная авторизация, разделение процессов через bubblewrap/seccomp, loopback по умолчанию |
-| Узкие экраны | Панель параметров переносится под изображение; длинные полосы инструментов прокручиваются |
+| Live video | Start/stop, camera/browser FPS, loss counters, four preview-quality choices |
+| Camera settings | Exposure, gain, white balance, format, ROI/scaling, ISP, sensor, presets and health |
+| Navigation | Setting search, grouped tabs, processing chain and keyboard shortcuts |
+| Viewing | Fit, 1:1, zoom/pan, grid, histogram, fullscreen, PNG/JPEG snapshot |
+| MaxAI | Eight feature groups, supported settings, worker states and coherent result snapshots |
+| Visual effects | Boxes, labels, scores/similarity, track IDs, center marks, tint and observed trails |
+| Access | Local authentication, bubblewrap/seccomp process separation, loopback by default |
+| Narrow screens | Settings move below the image; long toolbars and processing strips scroll horizontally |
 
-## Быстрый старт
+## Quick start
 
-### 1. Подготовьте Linux-хост
+### 1. Prepare the Linux host
 
-Текущий backend требует **Linux x86-64**, системный **/usr/bin/python3 3.10+** (проверено на 3.10), GCC, bubblewrap, gzip и pip для того же Python. Node.js нужен только разработчику для JS-тестов. Проверка UI выполнялась в Chromium на desktop/mobile размерах; полная матрица других браузеров не квалифицирована.
+The current backend requires **Linux x86-64**, system **/usr/bin/python3 3.10+** (verified on 3.10), GCC, bubblewrap, gzip and pip for that same interpreter. Node.js is needed only for developer JavaScript tests. UI checks used Chromium at desktop/mobile widths; a full browser matrix is not qualified.
 
-Пример системных зависимостей для Ubuntu/Debian, устанавливаемых оператором:
+Example system packages for Ubuntu/Debian, installed by the operator:
 
 ```sh
 sudo apt install git python3 python3-pip gcc bubblewrap gzip
 ```
 
-### 2. Получите и соберите проект
+### 2. Obtain and build the project
 
 ```sh
 git clone https://github.com/MaksimNuzhdin/MaxCameraApp.git ~/MaxCameraApp
@@ -43,80 +43,81 @@ cd ~/MaxCameraApp
 ./deploy/bootstrap-local.sh
 ```
 
-Bootstrap скачивает version-pinned зависимости с PyPI в локальную `pydeps/`, собирает C-приёмник, создаёт пример локальной конфигурации при её отсутствии и проверяет XML камеры. Он не запускает сервисы, не меняет firewall/router/account и не обращается к камере.
+Bootstrap downloads version-pinned packages from PyPI into local `pydeps/`, builds the C receiver, creates the local configuration example if absent, and verifies the pinned XML. It does not start services, change the firewall/router/account, or contact the camera.
 
-### 3. Укажите свою камеру
+### 3. Configure your camera
 
-Откройте `deploy/maxcamera.env` и задайте проверенный **MAXCAMERA_MAC**. Затем выполните ограниченное read-only обнаружение:
+Edit `deploy/maxcamera.env` and set the verified **MAXCAMERA_MAC**. Then perform bounded read-only discovery:
 
 ```sh
 /usr/bin/python3 deploy/discover-camera.py
 ```
 
-Впишите найденный IP в **MAXCAMERA_IP**. Оставьте **MAXCAMERA_LISTEN=127.0.0.1** для локального доступа. Адреса в `.example` намеренно не являются реальными настройками камеры. DHCP-адрес может меняться; не копируйте адрес из старого отчёта.
+Put the returned address in **MAXCAMERA_IP**. Keep **MAXCAMERA_LISTEN=127.0.0.1** for local-only access. The `.example` deliberately contains documentation-only addresses, not a real camera target. DHCP can change an address; do not copy one from an old report.
 
-### 4. Откройте приложение
+### 4. Open the application
 
 ```sh
 ./deploy/preview-local.sh
 ```
 
-Оставьте терминал открытым и перейдите на **http://localhost:8081/**. Для нового preview-состояния начальный вход: **admin / admin**. Смените пароль в **Account**, прежде чем кому-либо давать доступ. Установленный сервис и отдельный preview используют разное локальное состояние.
+Leave the terminal open and visit **http://localhost:8081/**. Initial sign-in for a new preview state is **admin / admin**. Change it under **Account** before granting access. The installed service and separate preview use different local state.
 
-Нажмите **Start stream**. Для цветного preview можно выбрать **Format → Full-field color preview**. Когда закончили, нажмите **Stop stream**, чтобы освободить камеру. Ctrl+C останавливает только компоненты этого foreground preview.
+Press **Start stream**. For a color preview, try **Format → Full-field color preview**. Finish with **Stop stream** to release the camera. Ctrl+C stops only this foreground preview's components.
 
-## AI: от включения до аннотаций
+## AI: from enablement to annotations
 
-1. Запустите поток. Выберите небольшую нужную группу функций во вкладке **AI**.
-2. Нажмите **Apply selection**. Недоступные возможности не следует трактовать как загруженные и проверенные модели.
-3. Смотрите состояние worker, error code, latency, configuration generation и возраст результата.
-4. В **Visual overlays** включите **Enable AI overlays**, затем нужные эффекты.
-5. Кнопка **AI overlay** в toolbar переключает только визуальный слой браузера. Она сама не запускает inference.
+1. Start streaming. Select a small required feature set in the **AI** tab.
+2. Press **Apply selection**. Availability does not itself establish model accuracy or a qualified gallery.
+3. Check worker state, error code, inference latency, configuration generation and result age.
+4. Under **Visual overlays**, turn on **Enable AI overlays** and choose effects.
+5. The toolbar's **AI overlay** button toggles browser annotations only. It does not start inference.
 
-| Группа | Назначение и ограничения |
+| Group | Purpose and limits |
 |---|---|
-| Face detection | Рамки лиц YuNet |
-| Gallery recognition | Сравнение SFace; неизвестное лицо не получает выдуманного имени, пустая gallery возвращает unknown |
-| Objects | YOLOX, классы COCO |
-| Plate candidates / OCR | Кандидаты номеров/OCR; качество и применимость зависят от данных, не квалифицированы |
-| Motion regions | Разница выборочных кадров; свет и движение камеры могут срабатывать как движение |
-| Pedestrians | HOG/SVM, отдельно от COCO person |
-| QR decoding | Декодированный текст ограничен контрактом камеры |
-| Tracking | Нужен хотя бы один detector; след соединяет только наблюдённые точки, без прогноза |
+| Face detection | YuNet face boxes |
+| Gallery recognition | SFace comparison; unknown faces receive no invented identity; an empty gallery returns unknown |
+| Objects | YOLOX COCO object classes |
+| Plate candidates / OCR | Plate candidates and text; applicability and accuracy are data-dependent and unqualified |
+| Motion regions | Differences between sampled frames; lighting and camera movement can trigger detections |
+| Pedestrians | HOG/SVM, separate from the COCO person detector |
+| QR decoding | Decoded text bounded by the camera contract |
+| Tracking | Requires a detector; trails join observed points without prediction |
 
-### Важно: AI не синхронизирован с видеокадром
+### AI is not synchronized to the displayed frame
 
-Результат AI приходит асинхронно. Подпись **not frame-synchronized** означает, что рамка не является гарантированной меткой текущего показываемого кадра. Возраст включает inference и продолжает увеличиваться между ответами.
+AI results arrive asynchronously. **not frame-synchronized** means a box is not a guaranteed annotation of the currently displayed video frame. Capture age includes inference and keeps advancing between responses.
 
-Приложение скрывает аннотации при stale/error/unavailable/disabled, потере связи, остановке, несовпадении геометрии/формата/конфигурации. Текущий предел свежести: **15 секунд**. Настройки AI очищаются при освобождении управления и не включаются автоматически после stop.
+Annotations disappear on stale/error/unavailable/disabled states, connection loss, stop, or source-format/geometry/configuration mismatch. The current freshness ceiling is **15 seconds**. AI enablement clears when control is released and is not restored automatically after stop.
 
-**Score не является универсальной уверенностью в процентах:** UI различает model score, cosine similarity и operational marker. Точность распознавания, реальные номера, gallery, endurance и физический MicroSD boot не квалифицированы этой публикацией.
+**Scores are not universal confidence percentages.** The UI distinguishes model scores, cosine similarity and operational markers. This publication does not qualify recognition accuracy, real plates, enrolled galleries, endurance or physical MicroSD boot.
 
-Скачанный **Snapshot** содержит изображение камеры без браузерных AI-аннотаций, сетки и гистограммы. Эффекты не меняют camera registers, сохранённые пресеты или исходное видео.
+Downloaded **Snapshot** images contain no browser AI annotations, grid or histogram. Visual effects do not change camera registers, saved presets or the source video.
 
-## Мобильный интерфейс
+## Mobile layout
 
-<img src="docs/images/screenshot-ai-mobile.png" width="390" alt="Синтетическая демонстрация MaxCameraApp на мобильном viewport 390 на 844">
+<img src="docs/images/screenshot-ai-mobile.png" width="390" alt="Synthetic MaxCameraApp demonstration at a 390 by 844 mobile viewport">
 
-*Тот же синтетический стенд при размере 390 × 844. Реальных сцен или персональных данных на скриншотах нет. Это иллюстрация адаптивной верстки, не тест точности AI.*
+*The same synthetic fixture at 390 × 844. No real scenes or personal data appear in these screenshots. They illustrate responsive layout, not AI quality.*
 
-## Документация
+## Documentation
 
-| Документ | Для чего |
+| Document | Contents |
 |---|---|
-| [Подробное руководство PDF](docs/MaxCameraApp_User_Guide_RU.pdf) | Пошаговые сценарии, все вкладки, AI/эффекты, аккаунт, эксплуатация и troubleshooting |
-| [Исходник руководства](docs/MaxCameraApp_User_Guide_RU.md) | Редактируемая версия на русском |
-| [Архитектура и API](docs/ARCHITECTURE.md) | Границы процессов, жизненный цикл камеры, маршруты и AI-integrity |
-| [Безопасность](docs/SECURITY.md) | Модель угроз, данные, авторизация и ограничения защиты |
-| [Развёртывание](docs/DEPLOYMENT.md) | Конфигурация, systemd, локальный preview, HTTPS/remote access |
-| [Разработка](docs/DEVELOPMENT.md) | Сборка, зависимости, offline/live проверки и synthetic fixture |
-| [AI visual overlays](docs/AI_VISUALS.md) | Геометрия, trails, состояния и предыдущая UI-проверка |
-| [AI update report](docs/AI_UPDATE_REPORT.md) | Закреплённый upstream и предыдущие bounded hardware-проверки |
-| [Проверки публикации](docs/PUBLICATION_VERIFICATION.md) | Что прошло, что не запускалось, состав и исключения |
+| [Complete PDF guide](docs/MaxCameraApp_User_Guide.pdf) | Step-by-step workflows, all tabs, AI/effects, accounts, operations and troubleshooting |
+| [Editable guide](docs/MaxCameraApp_User_Guide.md) | Maintained English source |
+| [Architecture and APIs](docs/ARCHITECTURE.md) | Process boundaries, camera lifecycle, routes and AI integrity |
+| [Security](docs/SECURITY.md) | Threat model, privacy, authentication and protection limits |
+| [Deployment](docs/DEPLOYMENT.md) | Configuration, systemd, preview, HTTPS and remote access |
+| [Development](docs/DEVELOPMENT.md) | Build, dependencies, offline/live checks and synthetic fixture |
+| [AI visual overlays](docs/AI_VISUALS.md) | Geometry, trails, states and earlier UI checks |
+| [AI update report](docs/AI_UPDATE_REPORT.md) | Pinned upstream and earlier bounded hardware checks |
+| [Publication verification](docs/PUBLICATION_VERIFICATION.md) | Passed/not-run checks, contents and exclusions |
+| [Third-party notices](docs/THIRD_PARTY_NOTICES.md) | UI and embedded PDF font licenses |
 
-## Проверки разработчика
+## Developer checks
 
-После bootstrap и установки Node.js (18+ рекомендуется):
+After bootstrap and a Node.js installation (18+ recommended):
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=pydeps:backend \
@@ -127,30 +128,28 @@ node tests/test_ai_visuals.cjs
 bash -n deploy/*.sh
 ```
 
-Пройдены 22 backend-теста, оба JS-набора, parse/syntax проверки, сверка XML/assets/source hashes, чистая установка зависимостей и сборка/загрузка C-приёмника. Скриншоты иллюстрируют интерфейс и не заменяют аппаратные тесты.
+The release passed 22 backend tests, both JavaScript suites, parse/syntax checks, XML/assets/source hashes, a clean dependency installation, and C receiver build/load. Screenshots illustrate the interface and do not replace hardware tests.
 
-`tests/preview_ai_visuals.py` запускает loopback-only стенд без камеры на порту 8082. `tests/check_http_ai.py` работает с уже запущенным preview; `--live` дополнительно использует камеру в ограниченном 18-секундном тесте. **Не запускайте live-проверку во время чужого стрима.** При публикации активный реальный поток намеренно не прерывался. CI workflow в initial release не настроен.
+`tests/preview_ai_visuals.py` provides a loopback-only synthetic fixture without a camera on port 8082. `tests/check_http_ai.py` uses an already-running preview; `--live` adds a bounded 18-second camera run. **Never run live checks against another user's active stream.** Publication work deliberately left the active real stream untouched. No CI workflow is configured in this initial release.
 
-## Установка постоянного сервиса
+## Installed user services
 
-Шаблоны в `deploy/systemd/` рассчитаны на путь **~/MaxCameraApp**. Если checkout расположен иначе, измените `EnvironmentFile` и `ExecStart` перед ручной установкой. Установленные сервисы используют порт 8080, отдельный development preview: 8081. Подробные команды и ограничения: [DEPLOYMENT.md](docs/DEPLOYMENT.md).
+Templates under `deploy/systemd/` assume **~/MaxCameraApp**. For a different checkout location, change `EnvironmentFile` and `ExecStart` before manual installation. Installed services use port 8080; the separate development preview uses 8081. See [deployment instructions](docs/DEPLOYMENT.md).
 
-Не используйте широкие process-name kills для перезапуска: они могут остановить другой preview. Предпочтительны конкретные systemd units или Ctrl+C у собственного preview. Одновременно камерой управляет только одно приложение.
+Do not use process-name-wide kills to restart the app; they can stop another preview. Target specific systemd units or press Ctrl+C in your own preview terminal. Only one application can control the physical camera at a time.
 
-## Что публикуется и что исключено
+## Publication contents and exclusions
 
-В Git входят исходники, тесты, документация, XML/provenance, version-lock зависимостей, пример конфигурации и два синтетических скриншота. `SOURCE_MANIFEST.json` сохраняет SHA-256 неизменённых backend/frontend/test-файлов.
+Git contains source, tests, documentation, XML/provenance, version-locked dependencies, configuration examples and two synthetic screenshots. `SOURCE_MANIFEST.json` records SHA-256 values for unchanged backend/frontend/test files.
 
-**Не публикуются:** `run/`, auth/session state, локальные IP/MAC-настройки, кадры реальной камеры, enrolled identities, модели/веса, `pydeps/`, `vendor/`, `.so`, `.pyc` и caches. Локальные файлы создаются во время настройки и игнорируются Git.
+**Excluded:** `run/`, authentication/session state, local IP/MAC configuration, real camera captures, enrolled identities, model weights, `pydeps/`, `vendor/`, `.so`, `.pyc` and caches. Local setup generates these files outside version control.
 
-## Безопасность и права
+## Security and rights
 
-По умолчанию доступ локальный. Три процесса разделены bubblewrap/seccomp, но sandbox не заменяет обновления и не гарантирует защиту от любой ошибки. Все вошедшие пользователи используют один аккаунт, поток и настройки камеры. Смена пароля инвалидирует session tokens, но не разрывает уже открытые WebSocket немедленно; для принудительного отключения всех viewers нужен согласованный restart web-службы.
+Access is local-only by default. Three processes are separated with bubblewrap/seccomp, but sandboxing does not replace updates or guarantee protection from every bug. Signed-in users share one account, stream and set of camera settings. A password change invalidates session tokens but does not immediately close already-open WebSockets; forcing all viewers to disconnect requires an agreed restart of the web service.
 
-Не открывайте наружу **admin/admin** и не передавайте пароль/видео по незащищённому HTTP через недоверенную сеть. Туннельный провайдер видит TLS-терминированный трафик. Public-access helpers меняют доступность и некоторые системные настройки; они не нужны для quick start и не запускаются автоматически.
+Never expose **admin/admin**, or send passwords/video through untrusted networks over plain HTTP. Tunnel providers can see TLS-terminated traffic. Public-access helpers change reachability and some system settings; they are not required for quick start and never run automatically.
 
-Контракт закреплён за [MaxCamera 07dfb588](https://github.com/MaksimNuzhdin/MaxCamera/commit/07dfb588b9576f827968c47c5798d9164561346d), firmware **0.3.16-ai-linux-dev**. Firmware, camera-side AI runtime, модели, gallery и calibration готовятся отдельно по upstream-процедурам.
+The reviewed contract is pinned to [MaxCamera 07dfb588](https://github.com/MaksimNuzhdin/MaxCamera/commit/07dfb588b9576f827968c47c5798d9164561346d), firmware **0.3.16-ai-linux-dev**. Firmware, the camera-side AI runtime, models, galleries and calibration are prepared separately through upstream procedures.
 
-Публикация не назначает новую общую лицензию проекту. Сохраняются существующие per-file права и права upstream. Локальный шрифт Archivo сопровождается [SIL Open Font License](frontend/fonts/OFL.txt); отдельно скачиваемые Python-зависимости имеют собственные лицензии.
-
-[Third-party notices, including PDF fonts](docs/THIRD_PARTY_NOTICES.md).
+This publication does not select a new project-wide license. Existing per-file and upstream rights remain applicable. Archivo retains its [SIL Open Font License](frontend/fonts/OFL.txt); separately downloaded Python packages retain their own licenses. [Third-party notices](docs/THIRD_PARTY_NOTICES.md) also cover fonts embedded in the PDF.

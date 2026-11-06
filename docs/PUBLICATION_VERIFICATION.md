@@ -18,6 +18,7 @@ This source release packages the current MaxCameraApp camera GUI and AI overlays
 - Pinned camera XML Git blob and SHA-256 matched upstream MaxCamera commit `07dfb588b9576f827968c47c5798d9164561346d`.
 - Independent file/privacy review: no runtime/account files, captured scenes, model weights, gallery, local configuration, personal home paths or obvious secret patterns in the inspected export.
 - Archivo font copyright/OFL notice included.
+- English documentation/PDF source, metadata and extracted text checked; no Cyrillic or obsolete locale references remain in the current publication tree.
 - Desktop/mobile screenshots inspected; synthetic scene and fabricated results explicitly disclosed. PNG ancillary metadata removed without changing pixels.
 
 ## HTTP/current hardware status
@@ -34,7 +35,7 @@ No CI workflow is configured in this initial source release. Local checks above 
 
 ## Publication contents and exclusions
 
-Included: application source, upstream XML/provenance, tests, portable example configuration/service templates, setup/build instructions, Russian guide/PDF source, documentation and synthetic UI screenshots.
+Included: application source, upstream XML/provenance, tests, portable example configuration/service templates, setup/build instructions, English guide/PDF source, documentation and synthetic UI screenshots.
 
 Excluded: `run/`, auth/session records, `pydeps/`, `vendor/`, `.so`/`.pyc`/caches, local `deploy/maxcamera.env`, actual scene captures, enrolled identities, models and weights. The legacy process-name-wide restart helper was omitted; documented restarts target explicit systemd services or the owned foreground preview.
 

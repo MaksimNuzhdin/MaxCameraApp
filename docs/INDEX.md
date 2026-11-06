@@ -1,29 +1,30 @@
 # MaxCameraApp documentation
 
-## Пользователю
+## For users
 
-- [Полное руководство на русском, PDF](MaxCameraApp_User_Guide_RU.pdf)
-- [Редактируемое руководство](MaxCameraApp_User_Guide_RU.md)
-- [README и quick start](../README.md)
+- [Complete English PDF user guide](MaxCameraApp_User_Guide.pdf)
+- [Editable English guide](MaxCameraApp_User_Guide.md)
+- [README and quick start](../README.md)
 
-## Оператору и разработчику
+## For operators and developers
 
-- [Architecture / API](ARCHITECTURE.md)
-- [Security / privacy](SECURITY.md)
-- [Deployment / services / remote access](DEPLOYMENT.md)
-- [Development / dependencies / tests](DEVELOPMENT.md)
+- [Architecture and APIs](ARCHITECTURE.md)
+- [Security and privacy](SECURITY.md)
+- [Deployment, services and remote access](DEPLOYMENT.md)
+- [Development, dependencies and tests](DEVELOPMENT.md)
 - [Publication verification and exclusions](PUBLICATION_VERIFICATION.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
 
-## Реализованный AI-контракт и прошлые проверки
+## Implemented AI contract and earlier checks
 
 - [AI GUI update report](AI_UPDATE_REPORT.md)
 - [AI visual overlays](AI_VISUALS.md)
 - [Pinned upstream camera contract](../backend/data/upstream.json)
 
-## Иллюстрации
+## Illustrations
 
-[Desktop](images/screenshot-ai-desktop.png) и [mobile](images/screenshot-ai-mobile.png) показывают настоящий UI на одноразовом синтетическом стенде. Сцена, имена, детекции и результаты вымышлены. Переключатель Synthetic test отсутствует в production. Это не реальные кадры и не квалификация точности моделей.
+The [desktop](images/screenshot-ai-desktop.png) and [mobile](images/screenshot-ai-mobile.png) screenshots show the actual UI on a disposable synthetic fixture. Scenes, identities, detections and results are fabricated. The Synthetic test selector is absent from production. These are not real camera frames or evidence of model accuracy.
 
-## Обновление документации
+## Updating documentation
 
-Сначала сверяйте интерфейс, policy и XML. Меняйте Markdown-исходник руководства, пересобирайте PDF и проверяйте все страницы после layout-правок. Не включайте render/QA intermediates, локальные аккаунты, сцены, gallery или веса в публикацию.
+Keep all documentation and infrastructure materials in English. Check the actual interface, policy and XML before changing instructions. Edit the guide's Markdown source, rebuild the PDF and inspect every page after layout changes. Do not publish QA render intermediates, local accounts, real scenes, enrolled galleries or weights.
