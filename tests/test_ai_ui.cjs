@@ -1,0 +1,18 @@
+const assert = require("node:assert/strict");
+const AI = require("../frontend/ai.js");
+assert.equal(AI.features.reduce((mask, f) => mask | f.bit, 0), 255);
+assert.equal(AI.selectionError(17, 255), "");
+assert.match(AI.selectionError(128, 255), /detector/);
+assert.match(AI.selectionError(4, 1), /unsupported/);
+const data = { state: "fresh", result: { sequence: 9, age_us: 10_000_000, objects: [] }, max_age_us: 15_000_000 };
+assert.equal(AI.view(data, 4999, true).state, "fresh");
+assert.equal(AI.view(data, 5001, true).state, "stale");
+assert.equal(data.result.age_us, 10_000_000, "local aging must not mutate the original snapshot");
+assert.equal(AI.view(data, 0, false).result, null, "stop hides even a valid late response");
+assert.equal(AI.view({ state: "unavailable" }, 0, true).state, "unavailable");
+assert.equal(AI.view({ state: "error" }, 0, true).state, "error");
+assert.equal(AI.view(data, 0, true).result.objects.length, 0, "valid empty result remains explicit");
+assert.match(AI.scoreText({ feature: 1, class_id: 1, score: 600000 }), /cosine similarity/);
+assert.match(AI.scoreText({ feature: 1, class_id: 0, score: 600000 }), /model score/);
+assert.match(AI.scoreText({ feature: 3, score: 1000000 }), /marker/);
+console.log("PASS AI UI semantics: masks, capability errors, age, stop, unavailable, empty results and score meaning");

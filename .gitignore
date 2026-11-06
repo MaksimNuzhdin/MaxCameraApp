@@ -1,0 +1,18 @@
+pydeps/
+run/
+vendor/
+backend/__pycache__/
+*.log
+__pycache__/
+*.pyc
+# Private scene data, enrollment and model weights never belong in app source.
+captures/
+presets/
+models/
+*.onnx
+
+# Generated platform libraries and local configuration
+*.so
+deploy/maxcamera.env
+.venv/
+.pytest_cache/

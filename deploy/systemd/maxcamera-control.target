@@ -1,0 +1,5 @@
+[Unit]
+Description=MaxCamera Web application
+
+[Install]
+WantedBy=default.target

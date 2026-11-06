@@ -1,0 +1,16 @@
+[Unit]
+Description=MaxCamera Web: camera bridge (only process that reaches the camera)
+After=
+PartOf=maxcamera-control.target
+
+[Service]
+EnvironmentFile=-%h/MaxCameraApp/deploy/maxcamera.env
+ExecStart=%h/MaxCameraApp/deploy/sandbox-run.sh bridge
+Restart=always
+RestartSec=3
+TimeoutStopSec=30
+NoNewPrivileges=yes
+MemoryMax=2G
+
+[Install]
+WantedBy=maxcamera-control.target

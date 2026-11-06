@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d181e">
+<title>MaxCamera Control</title>
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<p id="boot" class="boot">Loading MaxCamera… On a slow connection this can take up to a minute.</p>
+<noscript><p class="boot">MaxCamera needs JavaScript. Turn it on and reload this page.</p></noscript>
+
+<section id="login" class="login" hidden>
+  <div class="mosaic" id="mosaic" aria-hidden="true"></div>
+  <form id="login-form" class="login-card" autocomplete="on">
+    <h1>MaxCamera</h1>
+    <p>Sign in to view the stream and control the camera.</p>
+    <label>Username<input id="login-user" name="username" autocomplete="username" required autofocus></label>
+    <label>Password<input id="login-pass" name="password" type="password" autocomplete="current-password" required></label>
+    <p id="login-error" class="form-error" role="alert"></p>
+    <button class="primary" type="submit">Sign in</button>
+  </form>
+</section>
+
+<div id="app" class="app" hidden>
+  <header class="topbar">
+    <div class="brand"><span class="bayer" aria-hidden="true"><i></i><i></i><i></i><i></i></span>MaxCamera</div>
+    <div id="camera-state" class="state" role="status"><i></i><span>Checking camera</span></div>
+    <div id="top-readings" class="readings"></div>
+    <button id="open-search" class="search-button" title="Find any setting (Ctrl+K)"><span class="long">Find a setting</span><span class="short">Find</span><kbd>Ctrl K</kbd></button>
+    <button id="open-account" class="ghost">Account</button>
+  </header>
+
+  <div id="password-warning" class="warning" hidden>
+    <span>This camera is online with the default password. Anyone who guesses it can watch and control the camera.</span>
+    <button id="warning-change" class="ghost">Change password</button>
+    <button id="warning-close" class="ghost" aria-label="Hide this warning">Hide</button>
+  </div>
+
+  <main class="workspace">
+    <section class="stage">
+      <div id="viewport" class="viewport">
+        <div id="frame" class="frame">
+          <canvas id="canvas" width="1280" height="960"></canvas>
+          <svg id="ai-overlay" class="ai-overlay" aria-hidden="true" hidden></svg>
+          <div id="grid-overlay" class="overlay-grid" hidden></div>
+        </div>
+        <div id="empty" class="empty">
+          <p id="empty-title">The camera is not connected</p>
+          <p id="empty-note">MaxCamera connects only while you stream or change a setting, so other applications can use the camera the rest of the time.</p>
+          <button id="empty-start" class="primary big">Start stream</button>
+        </div>
+        <canvas id="histogram" class="histogram" width="256" height="96" hidden></canvas>
+        <div id="hud" class="hud" hidden></div>
+        <div id="ai-overlay-status" class="ai-overlay-status" hidden></div>
+      </div>
+
+      <div class="transport">
+        <button id="stream-toggle" class="primary">Start stream</button>
+        <div class="tool-group">
+          <button id="snapshot" class="tool" disabled>Snapshot</button>
+          <select id="snapshot-format" class="tool-select" aria-label="Snapshot format">
+            <option value="png">PNG</option><option value="jpeg">JPEG</option>
+          </select>
+        </div>
+        <div class="tool-group" role="group" aria-label="View">
+          <button id="zoom-fit" class="tool">Fit</button>
+          <button id="zoom-one" class="tool">1:1</button>
+          <button id="toggle-grid" class="tool" aria-pressed="false">Grid</button>
+          <button id="toggle-ai-overlay" class="tool" aria-pressed="false" title="Toggle delayed AI annotations; configure effects in the AI tab">AI overlay</button>
+          <button id="toggle-histogram" class="tool" aria-pressed="false">Histogram</button>
+          <button id="fullscreen" class="tool">Fullscreen</button>
+        </div>
+        <label class="tool-label">Preview
+          <select id="preview-quality" class="tool-select">
+            <option value="320,40">Minimal</option>
+            <option value="640,50">Data saver</option>
+            <option value="1280,75" selected>Balanced</option>
+            <option value="0,90">Full detail</option>
+          </select>
+        </label>
+        <label class="tool-check" title="When a setting can only change while stopped, pause the stream briefly and resume it.">
+          <input id="auto-restart" type="checkbox" checked> Restart stream when needed
+        </label>
+      </div>
+
+      <nav id="chain" class="chain" aria-label="Image processing chain"></nav>
+    </section>
+
+    <aside class="inspector">
+      <nav id="tabs" class="tabs" role="tablist" aria-label="Settings"></nav>
+      <div id="panel" class="panel" role="tabpanel" tabindex="-1"></div>
+    </aside>
+  </main>
+</div>
+
+<dialog id="search-dialog" class="dialog search">
+  <input id="search-input" placeholder="Exposure, gamma, packet delay…" aria-label="Find a setting" autocomplete="off">
+  <div id="search-results" class="search-results"></div>
+</dialog>
+
+<dialog id="account-dialog" class="dialog">
+  <form id="password-form">
+    <h2>Account</h2>
+    <p id="account-user" class="muted"></p>
+    <label>Current password<input id="pw-current" type="password" autocomplete="current-password" required></label>
+    <label>New password<input id="pw-new" type="password" autocomplete="new-password" minlength="8" required></label>
+    <p id="pw-error" class="form-error" role="alert"></p>
+    <div class="dialog-actions">
+      <button type="button" id="sign-out" class="ghost">Sign out</button>
+      <span class="spacer"></span>
+      <button type="button" id="account-close" class="ghost">Close</button>
+      <button class="primary" type="submit">Change password</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirm-dialog" class="dialog">
+  <p id="confirm-text"></p>
+  <div class="dialog-actions">
+    <span class="spacer"></span>
+    <button id="confirm-no" class="ghost">Cancel</button>
+    <button id="confirm-yes" class="primary">Continue</button>
+  </div>
+</dialog>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="/static/ai.js" defer></script>
+<script src="/static/ai-visuals.js" defer></script>
+<script src="/static/app.js" defer></script>
+</body>
+</html>

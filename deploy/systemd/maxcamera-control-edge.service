@@ -1,0 +1,16 @@
+[Unit]
+Description=MaxCamera Web: TCP listener (accepts only)
+After=maxcamera-control-web.service
+PartOf=maxcamera-control.target
+
+[Service]
+EnvironmentFile=-%h/MaxCameraApp/deploy/maxcamera.env
+ExecStart=%h/MaxCameraApp/deploy/sandbox-run.sh edge
+Restart=always
+RestartSec=3
+TimeoutStopSec=30
+NoNewPrivileges=yes
+MemoryMax=2G
+
+[Install]
+WantedBy=maxcamera-control.target

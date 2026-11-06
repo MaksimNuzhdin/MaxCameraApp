@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/MaksimNuzhdin/MaxCamera",
+  "revision": "07dfb588b9576f827968c47c5798d9164561346d",
+  "firmware": "0.3.16-ai-linux-dev",
+  "xml_path": "SW/gige/MaxCamera.xml",
+  "xml_git_blob": "e4f1d8397e67d119ce6806aa231bbb198abc8247",
+  "xml_sha256": "125090243233f8abb8873ebe4167616f7463cb415022058e09a96fba98eb1b9f",
+  "contract_sources": {
+    "SW/gige/GigeAI.c": "109f880b83eaabe55dab2f7fc1730f384df31fc5",
+    "SW/ai/README.md": "40497f7a525abcf43e3c481e799c0b5f8b59b761"
+  }
+}
